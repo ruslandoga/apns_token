@@ -1,13 +1,31 @@
 defmodule APNSToken.MixProject do
   use Mix.Project
 
+  @version "0.1.0"
+  @repo_url "https://github.com/ruslandoga/apns_token"
+
   def project do
     [
       app: :apns_token,
-      version: "0.1.0-rc.0",
+      version: @version,
       elixir: "~> 1.15",
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+      # hex
+      package: [
+        licenses: ["MIT"],
+        links: %{"GitHub" => @repo_url}
+      ],
+      description: "Tiny APNs token generator",
+      # docs
+      name: "APNSToken",
+      docs: [
+        source_url: @repo_url,
+        source_ref: "v#{@version}",
+        main: "readme",
+        extras: ["README.md", "CHANGELOG.md"],
+        skip_undefined_reference_warnings_on: ["CHANGELOG.md"]
+      ]
     ]
   end
 

@@ -1,11 +1,11 @@
 defmodule APNSToken do
-  @moduledoc "Tiny APNS token generator"
+  @moduledoc "Tiny APNs token generator"
   alias JOSE.{JWK, JWS, JWT}
 
   @doc """
   Returns a JWT token suitable for APNs.
 
-   ## Options
+  ## Options
 
     * `:jwk` - JWK from PEM-encoded token signing key downloaded from [developer.apple.com](https://developer.apple.com/account/resources/keys/list)
     * `:kid` - The 10-character Key ID you obtained from your developer account; see [Get a key identifier.](https://developer.apple.com/help/account/manage-keys/get-a-key-identifier)
@@ -14,15 +14,15 @@ defmodule APNSToken do
 
   Please see [Obtain an encryption key and key ID from Apple](https://developer.apple.com/documentation/usernotifications/establishing-a-token-based-connection-to-apns#Obtain-an-encryption-key-and-key-ID-from-Apple) for more details.
   """
-  def generate(config) do
-    %JWK{} = jwk = Keyword.fetch!(config, :jwk)
-    kid = Keyword.fetch!(config, :kid)
-    iss = Keyword.fetch!(config, :iss)
-    cache = Keyword.get(config, :cache)
+  def generate(options) do
+    %JWK{} = jwk = Keyword.fetch!(options, :jwk)
+    kid = Keyword.fetch!(options, :kid)
+    iss = Keyword.fetch!(options, :iss)
+    cache = Keyword.get(options, :cache)
 
     # "hidden" opts
-    max_age = Keyword.get(config, :max_age) || jitter_max_age()
-    now = Keyword.get(config, :now) || System.system_time(:second)
+    max_age = Keyword.get(options, :max_age) || jitter_max_age()
+    now = Keyword.get(options, :now) || System.system_time(:second)
 
     generate(jwk, kid, iss, cache, now, max_age)
   rescue
