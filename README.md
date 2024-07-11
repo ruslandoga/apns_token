@@ -32,7 +32,8 @@ Finch.start_link(
 
 :ets.new(:apns_jwt_cache, [:named_table, :public, read_concurrency: true])
 
-# NOTE: kid, key_id, and team_id can be stored in app env on startup, e.g. in your app's config/runtime.exs
+# NOTE: key, key_id, and team_id can be stored in app env on startup,
+#       e.g. in your app's config/runtime.exs
 
 # Auth Key from .p8 file from Apple
 jwk =
