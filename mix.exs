@@ -41,7 +41,7 @@ defmodule APNSToken.MixProject do
     [
       {:jose, "~> 1.11"},
       {:jason, "~> 1.4", optional: true},
-      {:ex_doc, "~> 0.35.0", only: :dev},
+      {:ex_doc, "~> 0.36.0", only: :dev},
       {:dialyxir, "~> 1.4", only: :dev, runtime: false}
     ]
   end
