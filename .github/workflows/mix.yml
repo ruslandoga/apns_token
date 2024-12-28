@@ -4,10 +4,12 @@ on:
   pull_request:
   push:
     branches: [master]
+  schedule:
+    - cron: "21 8 * * *"
 
 jobs:
   test:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
 
     env:
       MIX_ENV: test
@@ -15,16 +17,19 @@ jobs:
     strategy:
       # https://hexdocs.pm/elixir/compatibility-and-deprecations.html#between-elixir-and-erlang-otp
       matrix:
-        elixir: [1.16, 1.15]
+        elixir: [1.18, 1.17, 1.16]
         otp: [26, 25]
         include:
           - elixir: 1.17
+            otp: 27
+          - elixir: 1.18
             otp: 27
 
     steps:
       - uses: actions/checkout@v4
 
-      - uses: erlef/setup-beam@v1
+      - id: beam
+        uses: erlef/setup-beam@v1
         with:
           elixir-version: ${{ matrix.elixir }}
           otp-version: ${{ matrix.otp }}
@@ -34,10 +39,10 @@ jobs:
           path: |
             deps
             _build
-          key: test-otp-${{ matrix.otp }}-elixir-${{ matrix.elixir }}-ref-${{ github.head_ref || github.ref }}-mix-${{ hashFiles('**/mix.lock') }}
+          key: test-${{ steps.beam.outputs.elixir-version }}-${{ github.head_ref || github.ref }}-${{ hashFiles('**/mix.lock') }}
           restore-keys: |
-            test-otp-${{ matrix.otp }}-elixir-${{ matrix.elixir }}-ref-${{ github.head_ref || github.ref }}-mix-
-            test-otp-${{ matrix.otp }}-elixir-${{ matrix.elixir }}-ref-refs/heads/master-mix-
+            test-${{ steps.beam.outputs.elixir-version }}-${{ github.head_ref || github.ref }}-
+            test-${{ steps.beam.outputs.elixir-version }}-refs/heads/master-mix-
 
       - run: mix deps.get --only $MIX_ENV
       - run: mix compile --warnings-as-errors
