@@ -17,13 +17,13 @@ jobs:
     strategy:
       # https://hexdocs.pm/elixir/compatibility-and-deprecations.html#between-elixir-and-erlang-otp
       matrix:
-        elixir: [1.18, 1.17, 1.16]
-        otp: [26, 25]
         include:
-          - elixir: 1.17
-            otp: 27
-          - elixir: 1.18
-            otp: 27
+          - elixir: 1.16
+            otp: 25
+          - elixir: 1.19
+            otp: 28
+            lint: true
+            dialyzer: true
 
     steps:
       - uses: actions/checkout@v4
@@ -34,7 +34,8 @@ jobs:
           elixir-version: ${{ matrix.elixir }}
           otp-version: ${{ matrix.otp }}
 
-      - uses: actions/cache@v4
+      - name: Restore deps cache
+        uses: actions/cache@v4
         with:
           path: |
             deps
@@ -44,16 +45,26 @@ jobs:
             test-${{ steps.beam.outputs.elixir-version }}-${{ github.head_ref || github.ref }}-
             test-${{ steps.beam.outputs.elixir-version }}-refs/heads/master-mix-
 
-      - run: mix deps.get --only $MIX_ENV
+      - run: mix deps.get --check-locked
+
+      - run: mix deps.unlock --check-unused
+        if: ${{ matrix.lint }}
+
       - run: mix compile --warnings-as-errors
+
+      - run: mix format --check-formatted
+        if: ${{ matrix.lint }}
+
       - run: mix test --cover
 
-  format:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: erlef/setup-beam@v1
+      - name: Restore PLTs cache
+        if: ${{ matrix.dialyzer }}
+        uses: actions/cache@v4
         with:
-          elixir-version: 1
-          otp-version: 27
-      - run: mix format --check-formatted
+          path: plts
+          key: plts-${{ steps.beam.outputs.elixir-version }}-${{ steps.beam.outputs.otp-version }}-${{ github.head_ref || github.ref }}
+          restore-keys: |
+            plts-${{ steps.beam.outputs.elixir-version }}-${{ steps.beam.outputs.otp-version }}-refs/heads/master
+
+      - run: mix dialyzer --format github
+        if: ${{ matrix.dialyzer }}

@@ -11,6 +11,11 @@ defmodule APNSToken.MixProject do
       elixir: "~> 1.16",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
+      # dialyzer
+      dialyzer: [
+        plt_local_path: "plts",
+        plt_core_path: "plts"
+      ],
       # hex
       package: [
         licenses: ["MIT"],
@@ -42,7 +47,7 @@ defmodule APNSToken.MixProject do
       {:jose, "~> 1.11"},
       {:jason, "~> 1.4", optional: true},
       {:ex_doc, "~> 0.36.1", only: :dev},
-      {:dialyxir, "~> 1.4", only: :dev, runtime: false}
+      {:dialyxir, "~> 1.4", only: [:test, :dev], runtime: false}
     ]
   end
 end
