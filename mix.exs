@@ -8,7 +8,7 @@ defmodule APNSToken.MixProject do
     [
       app: :apns_token,
       version: @version,
-      elixir: "~> 1.16",
+      elixir: "~> 1.18",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       # dialyzer

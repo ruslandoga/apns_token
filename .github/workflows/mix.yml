@@ -19,8 +19,8 @@ jobs:
       # https://hexdocs.pm/elixir/compatibility-and-deprecations.html#between-elixir-and-erlang-otp
       matrix:
         include:
-          - elixir: 1.16
-            otp: 25
+          - elixir: 1.18
+            otp: 27
           - elixir: 1.19
             otp: 28
             lint: true
