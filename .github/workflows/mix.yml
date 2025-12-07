@@ -44,7 +44,7 @@ jobs:
           key: test-${{ steps.beam.outputs.elixir-version }}-${{ github.head_ref || github.ref }}-${{ hashFiles('**/mix.lock') }}
           restore-keys: |
             test-${{ steps.beam.outputs.elixir-version }}-${{ github.head_ref || github.ref }}-
-            test-${{ steps.beam.outputs.elixir-version }}-refs/heads/master-mix-
+            test-${{ steps.beam.outputs.elixir-version }}-refs/heads/master-
 
       - run: mix deps.get --check-locked
 
