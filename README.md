@@ -1,4 +1,4 @@
-# APNSToken
+# APNs Token
 
 [![Documentation badge](https://img.shields.io/badge/Documentation-ff69b4)](https://hexdocs.pm/apns_token)
 [![Hex.pm badge](https://img.shields.io/badge/Package%20on%20hex.pm-informational)](https://hex.pm/packages/apns_token)
@@ -32,7 +32,8 @@ Finch.start_link(
 
 :ets.new(:apns_jwt_cache, [:named_table, :public, read_concurrency: true])
 
-# NOTE: kid, key_id, and team_id can be stored in app env on startup, e.g. in your app's config/runtime.exs
+# NOTE: key, key_id, and team_id can be stored in app env on startup,
+#       e.g. in your app's config/runtime.exs
 
 # Auth Key from .p8 file from Apple
 jwk =
@@ -49,7 +50,7 @@ key_id = "ABC123DEFG"
 # Team ID from developer account (View Account -> Membership)
 team_id = "DEF123GHIJ"
 
-token = APNSToken.generate(jwk: jwk, kid: key_id, iss: team_id, cache: :apns_jwt_cache)
+token = :apns_token.generate(jwk: jwk, kid: key_id, iss: team_id, cache: :apns_jwt_cache)
 
 device_id = "11aa01229f15f0f0c52029d8cf8cd0aeaf2365fe4cebc4af26cd6d76b7919ef7"
 topic = "com.sideshow.Apns2"
